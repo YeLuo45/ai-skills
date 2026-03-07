@@ -1,6 +1,6 @@
 ---
 name: git-operations
-description: Search GitHub repositories (global or user-owned), fork repos, clone and run projects, push, pull, and manage remotes via gh CLI and git. Use when the user asks to search repos, fork a project, clone, push, pull, sync with remote, or perform any git/GitHub workflow.
+description: Search GitHub repositories (global or user-owned), fork repos, clone and run projects, create branches, push, pull, and manage remotes via gh CLI and git. Use when the user asks to search repos, fork a project, create a branch, clone, push, pull, sync with remote, or perform any git/GitHub workflow.
 ---
 
 # Git Operations
@@ -295,17 +295,71 @@ git checkout <branch>
 
 ## 功能六：分支与远程管理
 
-### 分支操作
+### 创建分支
+
+**从当前 HEAD 创建并切换**（最常用）：
+```powershell
+git checkout -b <new-branch>
+```
+或使用 Git 2.23+ 的 `switch`：
+```powershell
+git switch -c <new-branch>
+```
+
+**从指定起点创建分支**（不切换）：
+```powershell
+# 从指定分支创建
+git branch <new-branch> <base-branch>
+
+# 从指定提交创建
+git branch <new-branch> <commit-hash>
+
+# 从标签创建
+git branch <new-branch> <tag-name>
+```
+
+**从指定起点创建并切换**：
+```powershell
+git checkout -b <new-branch> <base-branch>
+# 或
+git switch -c <new-branch> <base-branch>
+```
+
+**基于远程分支创建本地分支**：
+```powershell
+# 先拉取最新远程分支列表
+git fetch origin
+
+# 从远程分支创建并跟踪
+git checkout -b <local-branch> origin/<remote-branch>
+# 或
+git switch -c <local-branch> origin/<remote-branch>
+```
+
+**在远程创建分支**（推送新分支即创建）：
+```powershell
+git push -u origin <branch>
+```
+
+**分支命名建议**：`feature/xxx`、`fix/xxx`、`docs/xxx`、`release/xxx`，避免空格与特殊字符。
+
+### 分支操作（查看、删除）
 
 ```powershell
-# 查看所有分支
+# 查看所有分支（含远程）
 git branch -a
 
-# 创建并切换
+# 查看当前分支
+git branch
+
+# 创建并切换（见上方「创建分支」）
 git checkout -b <new-branch>
 
-# 删除本地分支
+# 删除本地分支（已合并才允许 -d）
 git branch -d <branch>
+
+# 强制删除本地分支
+git branch -D <branch>
 
 # 删除远程分支
 git push origin --delete <branch>
